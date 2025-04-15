@@ -683,7 +683,30 @@ namespace AirLineReservationConsoleSystem
         // 17. Confirms a user action (e.g., cancel booking)
         public static string ConfirmAction(string action)
         {
-            return "";
+            try
+            {
+                // Display confirmation message
+                Console.WriteLine($"Are you sure you want to {action}? (yes/no)");
+                string response = Console.ReadLine().ToLower();
+                // Check user response
+                if (response == "yes")
+                {
+                    return $"{action} confirmed.";
+                }
+                else if (response == "no")
+                {
+                    return $"{action} cancelled.";
+                }
+                else
+                {
+                    return "Invalid response. Please enter 'yes' or 'no'.";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur during confirmation
+                return $"Error confirming action due to: {ex.Message}";
+            }
         }
     }
 }
