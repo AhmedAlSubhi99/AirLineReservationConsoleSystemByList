@@ -339,8 +339,54 @@ namespace AirLineReservationConsoleSystem
         // 9. Cancels a flight booking
         public static string CancelFlightBooking(out string passengerName)
         {
-            passengerName = "";
-            return "";
+            try
+            {
+                // Added confirmation message
+                string confirmCancel = ConfirmAction("cancel flight booking");
+                Console.WriteLine(confirmCancel);
+                if (confirmCancel != "cancel flight booking confirmed.")
+                {
+                    passengerName = "";
+                    return "Flight cancellation cancelled.";
+                }
+                else
+                {
+                    Console.WriteLine("Flight cancellation confirmed.");
+                }
+                // Check if there are any bookings
+                if (bookingIDs.Count == 0)
+                {
+                    passengerName = "";
+                    return "No bookings available to cancel.";
+                }
+                // Cancel flight booking
+                Console.Write("Enter booking ID to cancel: ");
+                string bookingID = Console.ReadLine();
+                int index = bookingIDs.IndexOf(bookingID);
+                if (index != -1)
+                {
+                    bookingIDs.RemoveAt(index);
+                    bookedFlightCodes.RemoveAt(index);
+                    bookedFromCities.RemoveAt(index);
+                    bookedToCities.RemoveAt(index);
+                    bookedDepartureTimes.RemoveAt(index);
+                    bookedDurations.RemoveAt(index);
+                    bookedPrices.RemoveAt(index);
+                    bookedDestinations.RemoveAt(index);
+                    passengerName = bookedPassengerNames[index];
+                    bookedPassengerNames.RemoveAt(index);
+                    return $"Booking {bookingID} cancelled successfully for passenger {passengerName}.";
+                }
+                passengerName = "";
+                return $"Booking {bookingID} not found.";
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur during flight cancellation
+                passengerName = "";
+                return $"Error cancelling flight due to: {ex.Message}";
+            }
+            
         }
 
         // 10. Books flight
