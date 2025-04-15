@@ -241,7 +241,49 @@ namespace AirLineReservationConsoleSystem
         // 7. Find Flight by Code
         public static string FindFlightByCode(string code)
         {
-            return "";
+            try
+            {
+                // Added confirmation message
+                string confirmFind = ConfirmAction("find flight");
+                Console.WriteLine(confirmFind);
+
+                if (confirmFind != "find flight confirmed.")
+                {
+                    return "Flight search cancelled.";
+                }
+                else
+                {
+                    Console.WriteLine("Flight search confirmed.");
+                }
+
+                // Check if there are any flights
+                if (flightCodes.Count == 0)
+                {
+                    return "No flights available.";
+                }
+
+                // Check if flight code is empty
+                if (string.IsNullOrEmpty(code))
+                {
+                    return "Flight code cannot be empty.";
+                }
+
+                // Search for flight code in the list
+                int index = flightCodes.IndexOf(code);
+                if (index != -1)
+                {
+                    return $"Flight {code} found: From {fromCities[index]} to {toCities[index]}, " +
+                           $"Departure: {departureTimes[index]}, Duration: {durations[index]} mins, " +
+                           $"Price: ${prices[index]}, Destination: {destinations[index]}";
+                }
+
+                return $"Flight {code} not found.";
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur during flight search
+                return $"Error finding flight due to: {ex.Message}";
+            }
         }
 
         // 8. Updates the departure time of flight
