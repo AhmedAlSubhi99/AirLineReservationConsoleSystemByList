@@ -95,7 +95,11 @@ namespace AirLineReservationConsoleSystem
         // 4. Exit
         public static string ExitApplication()
         {
-            return "";
+            // Display exit message
+            Console.WriteLine("Thank you for using the Airline Reservation System!");
+            Console.WriteLine("Goodbye!");
+            // Return exit message
+            return "Application exited.";
         }
 
         // 5. Adds a new flight
