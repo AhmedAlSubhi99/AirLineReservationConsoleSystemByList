@@ -31,7 +31,7 @@ namespace AirLineReservationConsoleSystem
         // ──────────────────────────────
         // 1. Shows welcome screen
         public static string DisplayWelcomeMessage()
-        {
+        { 
             return "";
         }
 
