@@ -40,6 +40,265 @@ namespace AirLineReservationConsoleSystem
         // 1. Starts the system
         public static void StartSystem()
         {
+            try
+            {
+                // Display welcome message
+                DisplayWelcomeMessage();
+
+                while (true)
+                {
+                    // Clear console
+                    Console.Clear();
+
+                    // Display menu
+                    DisplayMenu();
+
+                    // Get user choice
+                    Console.Write("Enter your choice: ");
+                    string choice = Console.ReadLine();
+
+                    // Handle user choice
+                    switch (choice)
+                    {
+                        // Add flight
+                        case "1":
+                            // Get flight details from user
+                            Console.Write("Enter flight code: ");
+                            string flightCode = Console.ReadLine();
+
+                            Console.Write("Enter from city: ");
+                            string fromCity = Console.ReadLine();
+
+                            Console.Write("Enter to city: ");
+                            string toCity = Console.ReadLine();
+
+                            Console.Write("Enter departure time (yyyy-mm-dd hh:mm): ");
+                            DateTime departureTime;
+                            // Added error handling for date parsing
+                            if (!DateTime.TryParse(Console.ReadLine(), out departureTime))
+                            {
+                                Console.WriteLine("Invalid date format. Using current date/time.");
+                                departureTime = DateTime.Now;
+                            }
+
+                            Console.Write("Enter duration (in minutes): ");
+                            int duration;
+                            // Added error handling for duration
+                            if (!int.TryParse(Console.ReadLine(), out duration) || duration <= 0)
+                            {
+                                Console.WriteLine("Invalid duration. Using 60 minutes as default.");
+                                duration = 60;
+                            }
+
+                            Console.Write("Enter price: ");
+                            int basePrice;
+                            // Added error handling for price
+                            if (!int.TryParse(Console.ReadLine(), out basePrice) || basePrice <= 0)
+                            {
+                                Console.WriteLine("Invalid price. Using 100 as default.");
+                                basePrice = 100;
+                            }
+
+                            // Added error handling for destination
+                            Console.Write("Enter destination: ");
+                            string destination = Console.ReadLine();
+
+                            // Call AddFlight function
+                            string addFlightResult = AddFlight(flightCode, fromCity, toCity, departureTime, duration, basePrice, destination);
+                            Console.WriteLine(addFlightResult);
+                            break;
+
+                        // Display all flights
+                        case "2":
+                            // Call DisplayAllFlights function
+                            string displayFlightsResult = DisplayAllFlights();
+                            Console.WriteLine(displayFlightsResult);
+                            break;
+
+                        // Find flight by code
+                        case "3":
+                            // Get flight code from user
+                            Console.Write("Enter flight code to find: ");
+                            string findFlightCode = Console.ReadLine();
+
+                            // Call FindFlightByCode function
+                            string findFlightResult = FindFlightByCode(findFlightCode);
+                            Console.WriteLine(findFlightResult);
+                            break;
+
+                        // Update flight departure
+                        case "4":
+                            // Get new departure time from user
+                            Console.Write("Enter new departure time (yyyy-mm-dd hh:mm): ");
+                            DateTime newDepartureTime;
+                            // Added error handling for date parsing
+                            if (!DateTime.TryParse(Console.ReadLine(), out newDepartureTime))
+                            {
+                                Console.WriteLine("Invalid date format. Using current date/time.");
+                                newDepartureTime = DateTime.Now;
+                            }
+
+                            string updateFlightResult = UpdateFlightDeparture(ref newDepartureTime);
+                            Console.WriteLine(updateFlightResult);
+                            break;
+
+                        // Cancel flight booking
+                        case "5":
+                            string passengerName;
+                            string cancelBookingResult = CancelFlightBooking(out passengerName);
+                            Console.WriteLine(cancelBookingResult);
+                            break;
+
+                        case "6":
+
+                            Console.Write("Enter passenger name: ");
+                            string passengerNameToBook = Console.ReadLine();
+
+                            Console.Write("Enter flight code to book: ");
+                            string bookFlightCode = Console.ReadLine();
+
+                            // Lookup price by flight code
+                            int flightPrice = 0;
+                            bool found = false;
+                            for (int i = 0; i < flightCodes.Count; i++)
+                            {
+                                if (flightCodes[i] == bookFlightCode)
+                                {
+                                    flightPrice = prices[i];
+                                    found = true;
+                                    break;
+                                }
+                            }
+
+                            if (!found)
+                            {
+                                Console.WriteLine("Flight code not found. Using default price $100.");
+                                flightPrice = 100;
+                            }
+
+                            // Ask for number of tickets
+                            Console.Write("Enter number of tickets: ");
+                            int numTickets;
+                            bool isValidTickets = int.TryParse(Console.ReadLine(), out numTickets); // parse to integer if parsing fails, set to default value
+                            if (!isValidTickets || numTickets <= 0) // check if valid
+                            {
+                                Console.WriteLine("Invalid number of tickets. Using 1 as default.");
+                                numTickets = 1;
+                            }
+                            else if (numTickets > 10) // check if more than 10
+                            {
+                                Console.WriteLine("Maximum number of tickets is 10. Using 1 as default.");
+                                numTickets = 1;
+                            }
+                            else if (numTickets < 0) // check if negative
+                            {
+                                Console.WriteLine("Invalid number of tickets. Using 1 as default.");
+                                numTickets = 1;
+                            }
+
+                            // Ask for promo code
+                            Console.Write("Enter promo code or leave blank: ");
+                            string promoCode = Console.ReadLine();
+                            int discount = 0;
+
+                            if (promoCode == "Air20")
+                            {
+                                discount = 20;
+                            }
+                            else if (promoCode == "Air30")
+                            {
+                                discount = 30;
+                            }
+                            else if (promoCode == "Air50")
+                            {
+                                discount = 50;
+                            }
+                            else if (promoCode == "")
+                            {
+                                Console.WriteLine("Invalid promo code. No discount applied.");
+                                discount = 0;
+                            }
+
+                            // Calculate final price directly
+                            int finalPrice;
+                            if (discount > 0)
+                            {
+                                finalPrice = CalculateFare(flightPrice, numTickets, discount);
+                            }
+                            else
+                            {
+                                finalPrice = CalculateFare(flightPrice, numTickets);
+                                Console.WriteLine($"Total fare: ${finalPrice}");
+                            }
+
+                            // Book the flight
+                            string bookFlightResult = BookFlight(passengerNameToBook, bookFlightCode);
+
+                            // Update final calculated price in the booking list 
+                            if (bookFlightResult.Contains("successfully"))
+                            {
+                                bookedPrices.Add(finalPrice);
+                            }
+                            // Print booking confirmation
+                            else
+                            {
+                                Console.WriteLine("Booking failed.");
+                            }
+
+                            Console.WriteLine(bookFlightResult);
+                            break;
+
+                        // Validate flight code
+                        case "7":
+
+                            Console.Write("Enter flight code to validate: ");
+                            string validateFlightCode = Console.ReadLine();
+                            string validateFlightResult = ValidateFlightCode(validateFlightCode);
+                            Console.WriteLine(validateFlightResult);
+                            break;
+
+                        // Display flight details
+                        case "8":
+
+                            Console.Write("Enter flight code to display details: ");
+                            string displayFlightCode = Console.ReadLine();
+                            string displayFlightResult = DisplayFlightDetails(displayFlightCode);
+                            Console.WriteLine(displayFlightResult);
+                            break;
+
+                        // Search bookings by destination
+                        case "9":
+
+                            Console.Write("Enter destination city to search bookings: ");
+                            string searchDestination = Console.ReadLine();
+                            string searchBookingsResult = SearchBookingsByDestination(searchDestination);
+                            Console.WriteLine(searchBookingsResult);
+                            break;
+
+                        // Exit application
+                        case "10":
+
+                            string exitResult = ExitApplication();
+                            Console.WriteLine(exitResult);
+                            break;
+
+                        // Invalid choice
+                        default:
+
+                            Console.WriteLine("Invalid choice. Please try again.");
+                            break;
+                    }
+
+                    // Pause before returning to menu
+                    Console.WriteLine("\nPress any key to continue...");
+                    Console.ReadKey();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur during system startup
+                Console.WriteLine($"Error starting system due to : {ex.Message}");
+            }
 
         }
 
