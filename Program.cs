@@ -133,9 +133,9 @@ namespace AirLineReservationConsoleSystem
                             Console.Write("Enter new departure time (yyyy-mm-dd hh:mm): ");
                             DateTime newDepartureTime;
                             // Added error handling for date parsing
-                            if (!DateTime.TryParse(Console.ReadLine(), out newDepartureTime))
+                            if (!DateTime.TryParse(Console.ReadLine(), out newDepartureTime)) // parse to DateTime If parsing fails, set to current date/time
                             {
-                                Console.WriteLine("Invalid date format. Using current date/time.");
+                                    Console.WriteLine("Invalid date format. Using current date/time.");
                                 newDepartureTime = DateTime.Now;
                             }
 
@@ -145,13 +145,16 @@ namespace AirLineReservationConsoleSystem
 
                         // Cancel flight booking
                         case "5":
+                            // Call CancelFlightBooking function
                             string passengerName;
                             string cancelBookingResult = CancelFlightBooking(out passengerName);
                             Console.WriteLine(cancelBookingResult);
                             break;
 
+                        // Book flight
                         case "6":
 
+                            // Get passenger name and flight code from user
                             Console.Write("Enter passenger name: ");
                             string passengerNameToBook = Console.ReadLine();
 
@@ -161,16 +164,16 @@ namespace AirLineReservationConsoleSystem
                             // Lookup price by flight code
                             int flightPrice = 0;
                             bool found = false;
-                            for (int i = 0; i < flightCodes.Count; i++)
+                            for (int i = 0; i < flightCodes.Count; i++) // loop and check if flight code exists
                             {
-                                if (flightCodes[i] == bookFlightCode)
+                                if (flightCodes[i] == bookFlightCode) // check if flight code matches
                                 {
-                                    flightPrice = prices[i];
-                                    found = true;
+                                    flightPrice = prices[i]; // get price
+                                    found = true; // set found to true
                                     break;
                                 }
                             }
-
+                            // If flight code not found, set default price  
                             if (!found)
                             {
                                 Console.WriteLine("Flight code not found. Using default price $100.");
@@ -181,6 +184,7 @@ namespace AirLineReservationConsoleSystem
                             Console.Write("Enter number of tickets: ");
                             int numTickets;
                             bool isValidTickets = int.TryParse(Console.ReadLine(), out numTickets); // parse to integer if parsing fails, set to default value
+                            // Check if valid number of tickets
                             if (!isValidTickets || numTickets <= 0) // check if valid
                             {
                                 Console.WriteLine("Invalid number of tickets. Using 1 as default.");
@@ -201,42 +205,59 @@ namespace AirLineReservationConsoleSystem
                             Console.Write("Enter promo code or leave blank: ");
                             string promoCode = Console.ReadLine();
                             int discount = 0;
-
-                            if (promoCode == "Air20")
+                            // Check for valid promo code
+                            if (promoCode == "Air20") // check if promo code is valid
                             {
-                                discount = 20;
+                                discount = 20; // set discount to 20%
                             }
-                            else if (promoCode == "Air30")
+                            else if (promoCode == "Air30") // check if promo code is valid
                             {
-                                discount = 30;
+                                discount = 30; // set discount to 30%
                             }
-                            else if (promoCode == "Air50")
+                            else if (promoCode == "Air50") // check if promo code is valid
                             {
-                                discount = 50;
+                                discount = 50; // set discount to 50%                           
+                            }
+                            else if (promoCode == "Air10") // check if promo code is valid
+                            {
+                                discount = 10; // set discount to 10%
+                            }
+                            else if (promoCode == "Air5") // check if promo code is valid
+                            {
+                                discount = 5; // set discount to 5%
+                            }
+                            else if (promoCode == "Air0") // check if promo code is valid
+                            {
+                                discount = 0; // set discount to 0%
                             }
                             else if (promoCode == "")
                             {
                                 Console.WriteLine("Invalid promo code. No discount applied.");
-                                discount = 0;
                             }
 
                             // Calculate final price directly
                             int finalPrice;
-                            if (discount > 0)
+                            if (discount > 0) // check if discount is greater than 0
                             {
+                                Console.WriteLine($"Promo code applied. Discount: {discount}%");
                                 finalPrice = CalculateFare(flightPrice, numTickets, discount);
+                            }
+                            else if (discount == 0) // check if discount is 0
+                            {
+                                Console.WriteLine("No promo code applied.");
+                                finalPrice = CalculateFare(flightPrice, numTickets);
                             }
                             else
                             {
+                                Console.WriteLine("Invalid promo code. No discount applied.");
                                 finalPrice = CalculateFare(flightPrice, numTickets);
-                                Console.WriteLine($"Total fare: ${finalPrice}");
                             }
 
                             // Book the flight
                             string bookFlightResult = BookFlight(passengerNameToBook, bookFlightCode);
 
                             // Update final calculated price in the booking list 
-                            if (bookFlightResult.Contains("successfully"))
+                            if (bookFlightResult.Contains("successfully")) 
                             {
                                 bookedPrices.Add(finalPrice);
                             }
