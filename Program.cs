@@ -517,8 +517,44 @@ namespace AirLineReservationConsoleSystem
         // 13. Display full details of flight using code
         public static string DisplayFlightDetails(string code)
         {
-
-            return "";
+            try
+            {
+                // Added confirmation message
+                string confirmDisplayDetails = ConfirmAction("display flight details");
+                Console.WriteLine(confirmDisplayDetails);
+                if (confirmDisplayDetails != "display flight details confirmed.")
+                {
+                    return "Flight details display cancelled.";
+                }
+                else
+                {
+                    Console.WriteLine("Flight details display confirmed.");
+                }
+                // Check if flight code is empty
+                if (string.IsNullOrEmpty(code))
+                {
+                    return "Flight code cannot be empty.";
+                }
+                // Check if there are any flights
+                if (flightCodes.Count == 0)
+                {
+                    return "No flights available to display.";
+                }
+                // Search for flight code in the list
+                int index = flightCodes.IndexOf(code);
+                if (index != -1)
+                {
+                    return $"Flight {code} details: From {fromCities[index]} to {toCities[index]}, " +
+                           $"Departure: {departureTimes[index]}, Duration: {durations[index]} mins, " +
+                           $"Price: ${prices[index]}, Destination: {destinations[index]}";
+                }
+                return $"Flight {code} not found.";
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur during flight detail display
+                return $"Error displaying flight details due to: {ex.Message}";
+            }
         }
 
         // 14. Display or Search bookings by destination
