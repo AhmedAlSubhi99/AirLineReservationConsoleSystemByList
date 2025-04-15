@@ -392,7 +392,52 @@ namespace AirLineReservationConsoleSystem
         // 10. Books flight
         public static string BookFlight(string passengerName, string flightCode)
         {
-            return "";
+            try
+            {
+                // Added confirmation message
+                string confirmBook = ConfirmAction("book flight");
+                Console.WriteLine(confirmBook);
+                if (confirmBook != "book flight confirmed.")
+                {
+                    return "Flight booking cancelled.";
+                }
+                else
+                {
+                    Console.WriteLine("Flight booking confirmed.");
+                }
+                // Check if flight code is empty
+                if (string.IsNullOrEmpty(flightCode))
+                {
+                    return "Flight code cannot be empty.";
+                }
+                // Check if passenger name is empty
+                if (string.IsNullOrEmpty(passengerName))
+                {
+                    return "Passenger name cannot be empty.";
+                }
+                // Check if flight code exists
+                int index = flightCodes.IndexOf(flightCode);
+                if (index != -1)
+                {
+                    // Add booking details to lists
+                    bookingIDs.Add(GenerateBookingID(passengerName));
+                    bookedFlightCodes.Add(flightCodes[index]);
+                    bookedFromCities.Add(fromCities[index]);
+                    bookedToCities.Add(toCities[index]);
+                    bookedDepartureTimes.Add(departureTimes[index]);
+                    bookedDurations.Add(durations[index]);
+                    bookedPrices.Add(prices[index]);
+                    bookedDestinations.Add(destinations[index]);
+                    bookedPassengerNames.Add(passengerName);
+                    return $"Flight {flightCode} booked successfully for passenger {passengerName}.";
+                }
+                return $"Flight {flightCode} not found.";
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur during flight booking
+                return $"Error booking flight due to: {ex.Message}";
+            }
         }
 
         // 11. Validate if flight code exists
