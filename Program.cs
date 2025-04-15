@@ -82,8 +82,14 @@ namespace AirLineReservationConsoleSystem
 
         // 3. Shows welcome screen
         public static string DisplayWelcomeMessage()
-        { 
-            return "";
+        {
+            // Display welcome message
+            Console.WriteLine("Welcome to the Airline Reservation System!");
+            Console.WriteLine("=====================================");
+            Console.WriteLine("Please follow the instructions to proceed.");
+            Console.WriteLine("=====================================");
+            // Return welcome message
+            return "Welcome message displayed.";
         }
 
         // 4. Exit
