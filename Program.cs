@@ -626,19 +626,58 @@ namespace AirLineReservationConsoleSystem
         // 15. Calculates total fare
         public static int CalculateFare(int basePrice, int numTickets)
         {
-            return 0;
+            try
+            {
+                // Calculate total fare
+                int totalFare = basePrice * numTickets;
+                return totalFare;
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur during fare calculation
+                Console.WriteLine($"Error calculating fare due to: {ex.Message}");
+                return 0;
+            }
         }
 
         public static string CalculateFare(double basePrice, int numTickets)
         {
-            // Empty implementation
-            return "";
+            try
+            {
+                // Calculate total fare
+                double totalFare = basePrice * numTickets;
+                return $"Total fare: ${totalFare}";
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur during fare calculation
+                return $"Error calculating fare due to: {ex.Message}";
+            }
         }
 
         // 16. Overloaded version with discount applied
         public static int CalculateFare(int basePrice, int numTickets, int discount = 0)
         {
-            return 0;
+            try
+            {
+                // Calculate total fare with discount
+                double totalFare1;
+                double totalFare = basePrice * numTickets;
+
+                if (discount > 0)
+                {
+                    totalFare1 = (totalFare * discount / 100);
+                    totalFare -= totalFare1; // apply discount
+                }
+
+                return (int)totalFare; // return as integer
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur during fare calculation
+                Console.WriteLine($"Error calculating fare due to: {ex.Message}");
+                return 0;
+            }
         }
 
         // 17. Confirms a user action (e.g., cancel booking)
