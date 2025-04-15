@@ -488,7 +488,30 @@ namespace AirLineReservationConsoleSystem
         // 12. Generates booking ID
         public static string GenerateBookingID(string passengerName)
         {
-            return "";
+            try
+            {
+                // Check if passenger name is empty
+                if (string.IsNullOrEmpty(passengerName))
+                {
+                    return "Passenger name cannot be empty.";
+                }
+
+                // Create a random number generator
+                Random random = new Random();
+
+                // Generate random number
+                int randomNumber = random.Next(001, 500);
+
+                // Create a booking ID using the passenger name and random number
+                string bookingID = $"{passengerName.ToUpper()}-{randomNumber}";
+
+                return bookingID;
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur during booking ID generation
+                return $"Error generating booking ID due to: {ex.Message}";
+            }
         }
 
         // 13. Display full details of flight using code
