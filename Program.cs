@@ -443,7 +443,46 @@ namespace AirLineReservationConsoleSystem
         // 11. Validate if flight code exists
         public static string ValidateFlightCode(string flightCode)
         {
-            return "";
+            try
+            {
+                // Added confirmation message
+                string confirmValidate = ConfirmAction("validate flight code");
+                Console.WriteLine(confirmValidate);
+
+                if (confirmValidate != "validate flight code confirmed.")
+                {
+                    return "Flight validation cancelled.";
+                }
+                else
+                {
+                    Console.WriteLine("Flight validation confirmed.");
+                }
+
+                // Check if flight code is empty
+                if (string.IsNullOrEmpty(flightCode))
+                {
+                    return "Flight code cannot be empty.";
+                }
+
+                // Check if there are any flights
+                if (flightCodes.Count == 0)
+                {
+                    return "No flights available to validate.";
+                }
+
+                // Search for flight code in the list
+                if (flightCodes.Contains(flightCode))
+                {
+                    return $"Flight {flightCode} is valid.";
+                }
+
+                return $"Flight {flightCode} is not valid.";
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur during flight validation
+                return $"Error validating flight code due to: {ex.Message}";
+            }
         }
 
         // 12. Generates booking ID
