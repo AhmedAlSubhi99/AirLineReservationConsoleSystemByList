@@ -198,7 +198,44 @@ namespace AirLineReservationConsoleSystem
         // 6. Prints all flights
         public static string DisplayAllFlights()
         {
+            try
+            {
+                // Added confirmation message
+                string confirmDisplay = ConfirmAction("display all flights");
+                Console.WriteLine(confirmDisplay);
 
+                if (confirmDisplay != "display all flights confirmed.")
+                {
+                    return "Flight display cancelled.";
+                }
+                else
+                {
+                    Console.WriteLine("Flight display confirmed.");
+                }
+
+                // Check if there are any flights
+                if (flightCodes.Count == 0)
+                {
+                    return "No flights available.";
+                }
+
+                // Print all flight details
+                string flightDetails = "Available Flights:\n";
+
+                for (int i = 0; i < flightCodes.Count; i++)
+                {
+                    flightDetails += $"{flightCodes[i]}: From {fromCities[i]} to {toCities[i]}, " +
+                                    $"Departure: {departureTimes[i]}, Duration: {durations[i]} mins, " +
+                                    $"Price: ${prices[i]}, Destination: {destinations[i]}\n";
+                }
+
+                return flightDetails;
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur during flight display
+                return $"Error displaying flights due to: {ex.Message}";
+            }
         }
 
         // 7. Find Flight by Code
