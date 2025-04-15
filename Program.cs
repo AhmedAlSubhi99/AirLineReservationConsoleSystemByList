@@ -45,6 +45,7 @@ namespace AirLineReservationConsoleSystem
                 // Display welcome message
                 DisplayWelcomeMessage();
 
+
                 while (true)
                 {
                     // Clear console
@@ -967,5 +968,6 @@ namespace AirLineReservationConsoleSystem
                 return $"Error confirming action due to: {ex.Message}";
             }
         }
+
     }
 }
