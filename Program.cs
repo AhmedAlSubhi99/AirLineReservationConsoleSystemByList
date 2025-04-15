@@ -560,7 +560,67 @@ namespace AirLineReservationConsoleSystem
         // 14. Display or Search bookings by destination
         public static string SearchBookingsByDestination(string toCity)
         {
-            return "";
+            try
+            {
+                // Added confirmation message
+                string confirmSearch = ConfirmAction("search bookings by destination");
+                Console.WriteLine(confirmSearch);
+
+                if (confirmSearch != "search bookings by destination confirmed.")
+                {
+                    return "Booking search cancelled.";
+                }
+                else
+                {
+                    Console.WriteLine("Booking search confirmed.");
+                }
+
+                // Check if destination is empty
+                if (string.IsNullOrEmpty(toCity))
+                {
+                    return "Destination city cannot be empty.";
+                }
+
+                // Check if there are any flights
+                if (flightCodes.Count == 0)
+                {
+                    return "No flights available.";
+                }
+
+                // Check if there are any bookings
+                if (bookingIDs.Count == 0)
+                {
+                    return "No bookings available.";
+                }
+
+                // Filter and display bookings
+                string bookingDetails = $"Bookings to {toCity}:\n";
+                bool foundBookings = false;
+
+                for (int i = 0; i < bookedToCities.Count; i++)
+                {
+                    if (bookedToCities[i] == toCity)
+                    {
+                        bookingDetails += $"{bookingIDs[i]}: Flight {bookedFlightCodes[i]}, " +
+                                         $"From {bookedFromCities[i]}, Departure: {bookedDepartureTimes[i]}, " +
+                                         $"Duration: {bookedDurations[i]} mins, Price: ${bookedPrices[i]}, " +
+                                         $"Passenger: {bookedPassengerNames[i]}\n";
+                        foundBookings = true;
+                    }
+                }
+
+                if (!foundBookings)
+                {
+                    return $"No bookings found for destination {toCity}.";
+                }
+
+                return bookingDetails;
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur during booking search
+                return $"Error searching bookings due to: {ex.Message}";
+            }
         }
 
         // 15. Calculates total fare
