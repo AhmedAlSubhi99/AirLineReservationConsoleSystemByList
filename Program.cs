@@ -289,7 +289,51 @@ namespace AirLineReservationConsoleSystem
         // 8. Updates the departure time of flight
         public static string UpdateFlightDeparture(ref DateTime departure)
         {
-            return "";
+            try
+            {
+                // Added confirmation message
+                string confirmUpdate = ConfirmAction("update flight departure");
+                Console.WriteLine(confirmUpdate);
+
+                if (confirmUpdate != "update flight departure confirmed.")
+                {
+                    return "Flight update cancelled.";
+                }
+                else
+                {
+                    Console.WriteLine("Flight update confirmed.");
+                }
+
+                // Check if departure time is in the past
+                if (departure < DateTime.Now)
+                {
+                    return "Departure time cannot be in the past.";
+                }
+
+                // Check if there are any flights
+                if (flightCodes.Count == 0)
+                {
+                    return "No flights available to update.";
+                }
+
+                // Update flight departure time
+                Console.Write("Enter flight code to update: ");
+                string flightCode = Console.ReadLine();
+
+                int index = flightCodes.IndexOf(flightCode);
+                if (index != -1)
+                {
+                    departureTimes[index] = departure;
+                    return $"Flight {flightCode} departure time updated to {departure}.";
+                }
+
+                return $"Flight {flightCode} not found.";
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur during flight update
+                return $"Error updating flight due to: {ex.Message}";
+            }
         }
 
         // 9. Cancels a flight booking
