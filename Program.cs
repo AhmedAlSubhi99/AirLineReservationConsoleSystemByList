@@ -105,13 +105,100 @@ namespace AirLineReservationConsoleSystem
         // 5. Adds a new flight
         public static string AddFlight(string flightCode, string fromCity, string toCity, DateTime departureTime, int duration, int basePrice, string destination)
         {
-            return "";
+            try
+            {
+                // Added confirmation message
+                string confirmAdd = ConfirmAction("add flight");
+                Console.WriteLine(confirmAdd);
+
+                if (confirmAdd != "add flight confirmed.")
+                {
+                    return "Flight addition cancelled.";
+                }
+                else
+                {
+                    Console.WriteLine("Flight addition confirmed.");
+                }
+
+                // Check if flight code is empty
+                if (string.IsNullOrEmpty(flightCode))
+                {
+                    return "Flight code cannot be empty.";
+                }
+
+                // Check if flight code already exists
+                if (flightCodes.Contains(flightCode))
+                {
+                    return $"Flight code {flightCode} already exists.";
+                }
+
+                // Check if from city is empty
+                if (string.IsNullOrEmpty(fromCity))
+                {
+                    return "From city cannot be empty.";
+                }
+
+                // Check if to city is empty
+                if (string.IsNullOrEmpty(toCity))
+                {
+                    return "To city cannot be empty.";
+                }
+
+                // Check if departure time is in the past
+                if (departureTime < DateTime.Now)
+                {
+                    return "Departure time cannot be in the past.";
+                }
+
+                // Check if duration is valid
+                if (duration <= 0)
+                {
+                    return "Duration must be greater than zero.";
+                }
+
+                // Check if base price is valid
+                if (basePrice <= 0)
+                {
+                    return "Base price must be greater than zero.";
+                }
+
+                // Check if destination is empty
+                if (string.IsNullOrEmpty(destination))
+                {
+                    return "Destination cannot be empty.";
+                }
+
+                // Check if from city and to city are the same
+                if (fromCity == toCity)
+                {
+                    return "From city and to city cannot be the same.";
+                }
+
+                // Add flight details to lists
+                flightCodes.Add(flightCode);
+                fromCities.Add(fromCity);
+                toCities.Add(toCity);
+                departureTimes.Add(departureTime);
+                durations.Add(duration);
+                prices.Add(basePrice);
+                destinations.Add(destination);
+
+                // print details of the added flight
+                return $"Flight {flightCode} added successfully: From {fromCity} to {toCity}, " +
+                       $"Departure: {departureTime}, Duration: {duration} mins, Price: ${basePrice}, " +
+                       $"Destination: {destination}";
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur during flight addition
+                return $"Error adding flight due to: {ex.Message}";
+            }
         }
 
         // 6. Prints all flights
         public static string DisplayAllFlights()
         {
-            return "";
+
         }
 
         // 7. Find Flight by Code
